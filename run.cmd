@@ -1,0 +1,1 @@
+java -jar target/OT-server-1.0.0.war --spring.profiles.active=dev
