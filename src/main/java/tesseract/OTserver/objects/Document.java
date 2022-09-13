@@ -16,7 +16,7 @@ public class Document {
     private String model;
 
     /**
-     * The revision Id of the document. Each committed string change request incrememts this value.
+     * The revision Id of the document. Each committed string change request increments this value.
      * This is used to flag historical requests as irrelevant
      */
     private Integer revID;
