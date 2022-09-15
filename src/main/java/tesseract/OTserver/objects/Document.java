@@ -32,7 +32,7 @@ public class Document {
     private Queue<StringChangeRequest> pendingChangesQueue;
 
     public Document() {
-        this.language = DocumentLanguage.JAVA;
+        this.language = DocumentLanguage.java;
         this.model = "";
         this.revID = 1;
         this.changeHistory = new HashMap<>();

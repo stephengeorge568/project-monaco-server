@@ -5,58 +5,48 @@
 <mapper namespace="com.aimster.aimsterserver.mappers.UserMapper">
 
     <!-- Data type maps -->
-    <resultMap id="UserMap" type="User">
+    <resultMap id="GetDocumentResponseMap" type="GetDocumentResponse">
         <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="password_hash" property="password" />
-        <result column="email" property="email" />
-        <result column="experience" property="experience" />
-        <result column="confirmation_code" property="confirmationCode" />
-        <result column="confirmation_date" property="confirmationDate" />
-    </resultMap>
-
-    <resultMap id="UserProfileResponseMap" type="UserProfileResponse">
-        <id column="id" property="id" />
-        <result column="username" property="username" />
-        <result column="experience" property="experience" />
+        <result column="password_hash" property="password_hash" />
+        <result column="filename" property="filename" />
     </resultMap>
 
     <!-- Query definitions -->
-    <select id="getUserById" resultMap="UserProfileResponseMap">
-        SELECT id,username,experience FROM user WHERE id=#{id}
+    <select id="getDocumentById" resultMap="GetDocumentResponseMap">
+        SELECT id,password_hash,filename FROM document WHERE id=#{id}
     </select>
 
     <!-- Last three properties populate request's id field as the auto generated ID from mySQL -->
-    <insert id="insertUser" parameterType="com.aimster.aimsterserver.objects.requests.CreateUserRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        INSERT INTO user
-        (username, password_hash, email, confirmation_code, confirmation_date)
+    <insert id="insertDocument" parameterType="CreateDocumentRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO document
+        (password_hash, filename, filetype)
         VALUES
-        (#{request.username}, #{request.password}, #{request.email}, #{request.confirmationCode}, #{request.confirmationDate})
+        (#{password_hash}, #{request.filename}, #{request.filetype})
     </insert>
 
-    <delete id="deleteUserById">
-        DELETE FROM user WHERE
+    <delete id="deleteDocumentById">
+        DELETE FROM document WHERE
         id = #{id}
     </delete>
 
-    <update id="updateUser">
-        UPDATE user SET
-        <if test = "request.username != null">
-            username = #{request.username},
-        </if>
-        <if test = "request.password != null">
-            password_hash = #{request.password},
-        </if>
-        <if test = "request.email != null">
-            email = #{request.email},
-        </if>
-        <if test = "request.confirmationCode != null">
-            confirmation_code = #{request.confirmationCode},
-        </if>
-        <if test = "request.confirmationDate != null">
-            confirmation_date = #{request.confirmationDate},
-        </if>
-        updated_at = CURRENT_TIMESTAMP()
-        WHERE id = #{request.id}
-    </update>
+<!--    <update id="updateDocument">-->
+<!--        UPDATE user SET-->
+<!--        <if test = "request.username != null">-->
+<!--            username = #{request.username},-->
+<!--        </if>-->
+<!--        <if test = "request.password != null">-->
+<!--            password_hash = #{request.password},-->
+<!--        </if>-->
+<!--        <if test = "request.email != null">-->
+<!--            email = #{request.email},-->
+<!--        </if>-->
+<!--        <if test = "request.confirmationCode != null">-->
+<!--            confirmation_code = #{request.confirmationCode},-->
+<!--        </if>-->
+<!--        <if test = "request.confirmationDate != null">-->
+<!--            confirmation_date = #{request.confirmationDate},-->
+<!--        </if>-->
+<!--        updated_at = CURRENT_TIMESTAMP()-->
+<!--        WHERE id = #{request.id}-->
+<!--    </update>-->
 </mapper>
