@@ -40,11 +40,12 @@ public class DocumentController {
     @RequestMapping(
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
-            method = RequestMethod.POST
+            method = RequestMethod.POST,
+            path = "/auth"
     )
     @ResponseBody
-    public boolean authenticateDocumentPassword(HttpServletRequest httpRequest, @RequestBody AuthenticateRequest request) {
-        return documentService.
+    public boolean authenticateDocumentPassword(HttpServletRequest httpRequest, @RequestBody AuthenticateRequest request) throws IOException {
+        return documentService.authenticateDocument(request);
     }
 
 
