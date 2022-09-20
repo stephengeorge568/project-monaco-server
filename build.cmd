@@ -1,1 +1,1 @@
-mvn clean package
+mvn package -Pdev -DprofileIdEnabled=true

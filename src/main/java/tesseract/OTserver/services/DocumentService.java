@@ -2,6 +2,7 @@ package tesseract.OTserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tesseract.OTserver.mappers.FileMapper;
@@ -24,12 +25,17 @@ public class DocumentService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Value("${document.directory.path}")
-    private String documentDirectoryPath;
+    @Autowired
+    private Environment env;
+
+//    @Value("${document.directory.path}")
+//    private String documentDirectoryPath;
 
     public GetDocumentResponse getDocumentById(Long id) throws IOException {
 
         GetDocumentResponse response = fileMapper.getDocumentById(id);
+
+        String documentDirectoryPath = env.getProperty("document.directory.path");
 
         // Get document model
         String filepath = documentDirectoryPath + response.getId() + '.' + response.getFiletype();
