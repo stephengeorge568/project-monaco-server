@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.aimster.aimsterserver.mappers.UserMapper">
+<mapper namespace="tesseract.OTserver.mappers.FileMapper">
 
     <!-- Data type maps -->
     <resultMap id="GetDocumentResponseMap" type="GetDocumentResponse">
@@ -17,11 +17,11 @@
     </select>
 
     <!-- Last three properties populate request's id field as the auto generated ID from mySQL -->
-    <insert id="insertDocument" parameterType="CreateDocumentRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <insert id="createDocument" parameterType="CreateDocumentRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         INSERT INTO document
         (password_hash, filename, filetype)
         VALUES
-        (#{password_hash}, #{request.filename}, #{request.filetype})
+        (#{request.password_hash}, #{request.filename}, #{request.filetype})
     </insert>
 
     <delete id="deleteDocumentById">

@@ -9,6 +9,7 @@ import tesseract.OTserver.services.OtService;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/api/ot")
 public class OtController {
 
     @Autowired
@@ -24,7 +25,7 @@ public class OtController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.POST,
-            path = "change"
+            path = "/change"
     )
     @ResponseBody
     public ResponseEntity<Integer> stringChange(HttpServletRequest httpRequest, @RequestBody StringChangeRequest request) {
@@ -35,7 +36,7 @@ public class OtController {
     @RequestMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.GET,
-            path = "identity"
+            path = "/identity"
     )
     @ResponseBody
     public ResponseEntity<Integer> getIdentity(HttpServletRequest httpRequest) {
@@ -47,7 +48,7 @@ public class OtController {
     @RequestMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.GET,
-            path = "model"
+            path = "/model"
     )
     @ResponseBody
     public String getModel(HttpServletRequest httpRequest) {
@@ -57,7 +58,7 @@ public class OtController {
     @RequestMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.GET,
-            path = "revId"
+            path = "/revId"
     )
     @ResponseBody
     public ResponseEntity<Integer> getDocumentRevID(HttpServletRequest httpRequest) {

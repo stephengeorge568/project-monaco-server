@@ -33,7 +33,7 @@ public class DocumentController {
             method = RequestMethod.POST
     )
     @ResponseBody
-    public Long insertUserFriendRequest(HttpServletRequest httpRequest, @RequestBody CreateDocumentRequest request) {
+    public Long createDocument(HttpServletRequest httpRequest, @RequestBody CreateDocumentRequest request) throws IOException {
         return documentService.createDocument(request);
     }
 

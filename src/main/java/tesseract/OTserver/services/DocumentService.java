@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tesseract.OTserver.mappers.FileMapper;
 import tesseract.OTserver.objects.AuthenticateRequest;
 import tesseract.OTserver.objects.CreateDocumentRequest;
@@ -53,9 +54,21 @@ public class DocumentService {
         return response;
     }
 
-    public Long createDocument(CreateDocumentRequest request) {
+    @Transactional
+    public Long createDocument(CreateDocumentRequest request) throws IOException {
         request.setPassword_hash(passwordEncoder.encode(request.getPassword_hash()));
-        return this.fileMapper.createDocument(request);
+
+        String documentDirectoryPath = env.getProperty("document.directory.path");
+
+        this.fileMapper.createDocument(request);
+
+        Long id = request.getId();
+
+        // Get document model
+        String filepath = documentDirectoryPath + id + '.' + request.getFiletype();
+        File file = new File(filepath);
+        file.createNewFile();
+        return id;
     }
 
     public boolean authenticateDocument(AuthenticateRequest request) throws IOException {

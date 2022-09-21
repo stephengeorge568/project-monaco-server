@@ -8,10 +8,13 @@ public class CreateDocumentRequest {
 
     private String filetype;
 
-    public CreateDocumentRequest(String password_hash, String filename, String filetype) {
+    private Long id;
+
+    public CreateDocumentRequest(String password_hash, String filename, String filetype, Long id) {
         this.password_hash = password_hash;
         this.filename = filename;
         this.filetype = filetype;
+        this.id = id;
     }
 
     public CreateDocumentRequest() {}
@@ -38,5 +41,13 @@ public class CreateDocumentRequest {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
