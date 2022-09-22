@@ -54,7 +54,7 @@ public class DocumentService {
         return response;
     }
 
-    @Transactional
+    @Transactional(rollbackFor=Exception.class)
     public Long createDocument(CreateDocumentRequest request) throws IOException {
         request.setPassword_hash(passwordEncoder.encode(request.getPassword_hash()));
 
@@ -67,6 +67,7 @@ public class DocumentService {
         // Get document model
         String filepath = documentDirectoryPath + id + '.' + request.getFiletype();
         File file = new File(filepath);
+        // TODO ERROR HANDLING
         file.createNewFile();
         return id;
     }

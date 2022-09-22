@@ -13,7 +13,7 @@
 
     <!-- Query definitions -->
     <select id="getDocumentById" resultMap="GetDocumentResponseMap">
-        SELECT id,password_hash,filename FROM document WHERE id=#{id}
+        SELECT id,password_hash,filename,filetype FROM document WHERE id=#{id}
     </select>
 
     <!-- Last three properties populate request's id field as the auto generated ID from mySQL -->
