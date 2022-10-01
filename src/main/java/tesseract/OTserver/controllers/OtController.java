@@ -48,20 +48,20 @@ public class OtController {
     @RequestMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.GET,
-            path = "/model"
+            path = "/model/{id}"
     )
     @ResponseBody
-    public String getModel(HttpServletRequest httpRequest) {
-        return otService.getDocumentModel();
+    public String getModel(HttpServletRequest httpRequest, @PathVariable Long id) {
+        return otService.getDocumentModel(id);
     }
 
     @RequestMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.GET,
-            path = "/revId"
+            path = "/revId/{id}"
     )
     @ResponseBody
-    public ResponseEntity<Integer> getDocumentRevID(HttpServletRequest httpRequest) {
+    public ResponseEntity<Integer> getDocumentRevID(HttpServletRequest httpRequest, @PathVariable Long id) {
         return ResponseEntity.ok(otService.getDocumentRevId());
     }
 

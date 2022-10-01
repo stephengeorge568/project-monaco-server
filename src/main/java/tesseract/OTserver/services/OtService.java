@@ -101,7 +101,7 @@ public class OtService {
         this.simpMessagingTemplate.convertAndSend("/broker/string-change-request", changedRequest);
     }
 
-    public String getDocumentModel() {
+    public String getDocumentModel(Long id) {
         return this.currentDocument.getModel();
     }
 

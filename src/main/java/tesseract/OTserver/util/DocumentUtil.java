@@ -35,13 +35,22 @@ public class DocumentUtil {
      */
     public static int getIndex(String model, int col, int line) {
         int index = 0;
-        String[] lines = model.split("\n");
+        System.out.println("New update");
+        int newLineCount = 0;
+        int colCount = 0;
 
-        for (int i = 0; i < line - 1; i++) {
-            index += lines[i].length(); // plus 1 because \n is removed via model.split
-        } index += col + line - 1;
+        // TODO just use model string
+        char[] arr = model.toCharArray();
+        while (index < arr.length && newLineCount < line - 1) {
+            if (arr[index] == '\n') newLineCount++;
+            index++;
+        }
+        while (index < arr.length && colCount < col - 1) {
+            colCount++;
+            index++;
+        }
 
-        return index - 1; // -1 because string first index is 0, whereas MonacoRange first index is 1
+        return index;
     }
 
 }
