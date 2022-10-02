@@ -1,13 +1,13 @@
 package tesseract.OTserver.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tesseract.OTserver.mappers.FileMapper;
-import tesseract.OTserver.objects.AuthenticateRequest;
+import tesseract.OTserver.objects.Document;
+import tesseract.OTserver.objects.OpenDocumentRequest;
 import tesseract.OTserver.objects.CreateDocumentRequest;
 import tesseract.OTserver.objects.GetDocumentResponse;
 
@@ -29,12 +29,14 @@ public class DocumentService {
     @Autowired
     private Environment env;
 
-//    @Value("${document.directory.path}")
-//    private String documentDirectoryPath;
+    @Autowired
+    private OtService otService;
 
-    public GetDocumentResponse getDocumentById(Long id) throws IOException {
+    public GetDocumentResponse getDocumentById(Long id, String password) throws IOException {
 
         GetDocumentResponse response = fileMapper.getDocumentById(id);
+
+        if (!validatePassword(password, response.getPassword_hash())) throw new IOException("Wrong password");
 
         String documentDirectoryPath = env.getProperty("document.directory.path");
 
@@ -72,13 +74,29 @@ public class DocumentService {
         return id;
     }
 
-    public boolean authenticateDocument(AuthenticateRequest request) throws IOException {
-        GetDocumentResponse document = getDocumentById(request.getId());
-        return validatePassword(request.getPassword(), document.getPassword_hash());
+//    public void saveDocumentModel(Document document) {
+//        GetDocumentResponse documentMetadata = this.getDocumentById(document.getId(), document.get)
+//    }
+
+
+    public void openAndAuthenticateDocument(OpenDocumentRequest request) throws IOException {
+        // Get document from file system and database
+        GetDocumentResponse getDocumentResponse = getDocumentById(request.getId(), request.getPassword());
+
+        // Ensure no document in list shares request's id
+        if (this.otService.isDocumentPresent(getDocumentResponse.getId())) throw new IOException("Document cannot open because it is already open.");
+
+        validatePassword(request.getPassword(), getDocumentResponse.getPassword_hash());
+
+        // Create document object in list of documents that are open for transformation
+        Document document = new Document(getDocumentResponse.getId());
+        this.otService.getDocuments().put(document.getId(), document);
     }
 
     public boolean validatePassword(String givenPassword, String storedHashedPassword) {
-        return passwordEncoder.encode(givenPassword).equals(storedHashedPassword);
+        String given = passwordEncoder.encode(givenPassword);
+        System.out.println(given + " === " + storedHashedPassword);
+        return given.equals(storedHashedPassword);
     }
 
 }

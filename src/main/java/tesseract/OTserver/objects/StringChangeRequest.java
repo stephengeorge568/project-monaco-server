@@ -1,9 +1,13 @@
 package tesseract.OTserver.objects;
 
+import java.util.Objects;
+
 /**
  * Class that defines the change operation in the code editor.
  */
 public class StringChangeRequest {
+
+    private Long documentId;
 
     /**
      * Timestamp of the moment the operation was created in the client editor
@@ -35,6 +39,8 @@ public class StringChangeRequest {
      */
     private Integer setID;
 
+    private String password;
+
 
     // TODO cleanup, remove constructors, turn setters into builder
     public StringChangeRequest(String text, MonacoRange range) {
@@ -62,6 +68,8 @@ public class StringChangeRequest {
                 other.getRange().getEndLineNumber());
         this.revID = other.getRevID();
         this.setID = other.getSetID();
+        this.documentId = other.getDocumentId();
+        this.password = other.password;
     }
 
     public Integer getRevID() {
@@ -121,13 +129,30 @@ public class StringChangeRequest {
 
     public boolean isEqual(StringChangeRequest req) {
         return this.getRange().isEqual(req.getRange())
-                && this.text == req.getText();
+                && Objects.equals(this.text, req.getText());
+    }
+
+    public Long getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(Long documentId) {
+        this.documentId = documentId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
         return "{" +
                 "timestamp='" + timestamp + '\'' +
+                ", docId='" + documentId + '\'' +
                 ", text='" + text + '\'' +
                 ", identity='" + identity + '\'' +
                 ", rangeSC=" + range.getStartColumn() +

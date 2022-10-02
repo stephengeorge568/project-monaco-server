@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import tesseract.OTserver.objects.StringChangeRequest;
 import tesseract.OTserver.services.OtService;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/ot")
@@ -28,9 +29,9 @@ public class OtController {
             path = "/change"
     )
     @ResponseBody
-    public ResponseEntity<Integer> stringChange(HttpServletRequest httpRequest, @RequestBody StringChangeRequest request) {
+    public ResponseEntity<Integer> stringChange(HttpServletRequest httpRequest, @RequestBody StringChangeRequest request) throws IOException {
         System.out.printf("%s\n", request.toString());
-        return ResponseEntity.ok(this.otService.submitChange(request, this.otService.getCurrentDocument()));
+        return ResponseEntity.ok(this.otService.submitChange(request, this.otService.getDocument(request.getDocumentId())));
     }
 
     @RequestMapping(
@@ -62,7 +63,7 @@ public class OtController {
     )
     @ResponseBody
     public ResponseEntity<Integer> getDocumentRevID(HttpServletRequest httpRequest, @PathVariable Long id) {
-        return ResponseEntity.ok(otService.getDocumentRevId());
+        return ResponseEntity.ok(otService.getDocumentRevId(id));
     }
 
 }

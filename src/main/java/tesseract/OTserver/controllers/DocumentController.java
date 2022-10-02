@@ -3,7 +3,7 @@ package tesseract.OTserver.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import tesseract.OTserver.objects.AuthenticateRequest;
+import tesseract.OTserver.objects.OpenDocumentRequest;
 import tesseract.OTserver.objects.CreateDocumentRequest;
 import tesseract.OTserver.objects.GetDocumentResponse;
 import tesseract.OTserver.services.DocumentService;
@@ -23,8 +23,8 @@ public class DocumentController {
             path = "/{id}"
     )
     @ResponseBody
-    public GetDocumentResponse getDocument(HttpServletRequest httpRequest, @PathVariable Long id) throws IOException {
-        return documentService.getDocumentById(id);
+    public GetDocumentResponse getDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
+        return documentService.getDocumentById(id, password);
     }
 
     @RequestMapping(
@@ -41,12 +41,14 @@ public class DocumentController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE},
             method = RequestMethod.POST,
-            path = "/auth"
+            path = "/open"
     )
     @ResponseBody
-    public boolean authenticateDocumentPassword(HttpServletRequest httpRequest, @RequestBody AuthenticateRequest request) throws IOException {
-        return documentService.authenticateDocument(request);
+    public void openAndAuthenticateDocument(HttpServletRequest httpRequest, @RequestBody OpenDocumentRequest request) throws IOException {
+        documentService.openAndAuthenticateDocument(request);
     }
+
+
 
 
 }

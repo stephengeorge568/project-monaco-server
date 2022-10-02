@@ -20,6 +20,14 @@ public class OperationalTransformationTests {
     void contextLoads() {
     }
 
+    /*
+     StringChangeRequest{timestamp='2022-09-29T21:16:30.481Z', text='
+ot-server  | ', identity='2', rangeSC=1, rangeEC=1, rangeSL=1, rangeEL=1, revID=1, setID=null}
+ot-server  | StringChangeRequest{timestamp='2022-09-29T21:16:30.317Z', text='
+ot-server  | ', identity='1', rangeSC=1, rangeEC=1, rangeSL=2, rangeEL=2, revID=2, setID=null}
+     */
+
+
     @Test
     void transformOperation_LinesChangeWhenPrevAboveNext() {
         StringChangeRequest prev = new StringChangeRequest("a\nb\nc", new MonacoRange(4,8,1,1 ));

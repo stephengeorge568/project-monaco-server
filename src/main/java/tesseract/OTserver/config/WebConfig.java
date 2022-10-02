@@ -18,8 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         //registry.addMapping("/**").allowedOriginPatterns("*").maxAge(3600);
         // Set to accept all ...
-        String documentDirectoryPath = env.getProperty("document.directory.path");
-        System.out.println("PATH -----> :" + documentDirectoryPath);
         try {
             if (env.getProperty("spring.profiles.active").equals("prod")) {
                 registry.addMapping("/**"); // TODO

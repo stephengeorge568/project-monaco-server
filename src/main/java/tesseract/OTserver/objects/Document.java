@@ -7,9 +7,6 @@ import java.util.*;
  */
 public class Document {
 
-    // unused
-    private DocumentLanguage language;
-
     /**
      * The string model of the document. The text of the code file
      */
@@ -31,8 +28,10 @@ public class Document {
      */
     private Queue<StringChangeRequest> pendingChangesQueue;
 
-    public Document() {
-        this.language = DocumentLanguage.java;
+    private Long id;
+
+    public Document(Long id) {
+        this.id = id;
         this.model = "";
         this.revID = 1;
         this.changeHistory = new HashMap<>();
@@ -69,5 +68,9 @@ public class Document {
 
     public void setPendingChangesQueue(PriorityQueue<StringChangeRequest> pendingChangesQueue) {
         this.pendingChangesQueue = pendingChangesQueue;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

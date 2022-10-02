@@ -7,9 +7,9 @@ import tesseract.OTserver.objects.Document;
 import tesseract.OTserver.objects.StringChangeRequest;
 import tesseract.OTserver.util.DocumentUtil;
 import tesseract.OTserver.util.OperationalTransformation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class OtService {
@@ -18,16 +18,19 @@ public class OtService {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate; // for websocket messaging
 
-    // have it create new document when client connects TODO
-    private Document currentDocument;
-
     // Id given to each client that connections to this document session. This value is incremented.\
     // Temporary, 'sticky' session management will replace this
     private Integer clientIdentityCounter;
 
+    private HashMap<Long, Document> documents;
+
     public OtService() {
         this.clientIdentityCounter = 0;
-        this.currentDocument = new Document();
+    }
+
+    public Document getDocument(Long id) throws IOException {
+        if (!this.documents.containsKey(id)) throw new IOException("Attempted to get document with id " + id + " but failed.");
+        return this.documents.get(id);
     }
 
     /**
@@ -39,7 +42,7 @@ public class OtService {
     public Integer submitChange(StringChangeRequest request, Document document) {
 
         document.getPendingChangesQueue().add(request);
-        waitForTurn(request);
+        waitForTurn(request, document);
 
         // when this request's turn is next, transform
         ArrayList<StringChangeRequest> newChangeRequests = OperationalTransformation.transform(request, document.getChangeHistory());
@@ -61,10 +64,10 @@ public class OtService {
         }
 
         // remove this request from pending queue, since it is completed
-        this.currentDocument.getPendingChangesQueue().remove();
+        document.getPendingChangesQueue().remove();
 
         // return revID so client can update its document id
-        return this.currentDocument.getRevID();
+        return document.getRevID();
     }
 
     /**
@@ -72,10 +75,10 @@ public class OtService {
      * TODO Replace with a FIFO blocking queue or something like that
      * @param request the request this thread is responsible for
      */
-    private void waitForTurn(StringChangeRequest request) {
+    private void waitForTurn(StringChangeRequest request, Document document) {
         // while the next request in queue is not THIS one, wait 10 ms
-        while (!(this.currentDocument.getPendingChangesQueue().peek().getTimestamp().equals(request.getTimestamp())
-                && this.currentDocument.getPendingChangesQueue().peek().getIdentity().equals(request.getIdentity()))) {
+        while (!(document.getPendingChangesQueue().peek().getTimestamp().equals(request.getTimestamp())
+                && document.getPendingChangesQueue().peek().getIdentity().equals(request.getIdentity()))) {
             try {
                 Thread.currentThread().sleep(10);
             } catch (InterruptedException e) {
@@ -89,7 +92,8 @@ public class OtService {
      * @param changedRequest the string change request
      */
     private void updateModel(StringChangeRequest changedRequest) {
-        this.currentDocument.setModel(DocumentUtil.updateModel(this.currentDocument.getModel(), changedRequest));
+        Document doc = this.getDocuments().get(changedRequest.getDocumentId());
+        doc.setModel(DocumentUtil.updateModel(doc.getModel(), changedRequest));
     }
 
     /**
@@ -97,16 +101,21 @@ public class OtService {
      * @param changedRequest the request to propogate to clients
      */
     private void propogateToClients(StringChangeRequest changedRequest) {
-        changedRequest.setSetID(this.currentDocument.getRevID());
+        Document doc = this.getDocuments().get(changedRequest.getDocumentId());
+        changedRequest.setSetID(doc.getRevID());
         this.simpMessagingTemplate.convertAndSend("/broker/string-change-request", changedRequest);
     }
 
-    public String getDocumentModel(Long id) {
-        return this.currentDocument.getModel();
+    public boolean isDocumentPresent(Long id) {
+        return this.getDocuments().containsKey(id);
     }
 
-    public Integer getDocumentRevId() {
-        return this.currentDocument.getRevID();
+    public String getDocumentModel(Long id) {
+        return this.getDocuments().get(id).getModel();
+    }
+
+    public Integer getDocumentRevId(Long id) {
+        return this.getDocuments().get(id).getRevID();
     }
 
     public Integer getClientIdentityCounter() {
@@ -117,7 +126,11 @@ public class OtService {
         this.clientIdentityCounter++;
     }
 
-    public Document getCurrentDocument() {
-        return currentDocument;
+    public HashMap<Long, Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(HashMap<Long, Document> documents) {
+        this.documents = documents;
     }
 }

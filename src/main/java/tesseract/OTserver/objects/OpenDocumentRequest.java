@@ -1,17 +1,17 @@
 package tesseract.OTserver.objects;
 
-public class AuthenticateRequest {
+public class OpenDocumentRequest {
 
     private Long id;
 
     private String password;
 
-    public AuthenticateRequest(Long id, String password) {
+    public OpenDocumentRequest(Long id, String password) {
         this.id = id;
         this.password = password;
     }
 
-    public AuthenticateRequest() {}
+    public OpenDocumentRequest() {}
 
     public Long getId() {
         return id;
