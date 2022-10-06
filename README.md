@@ -5,7 +5,8 @@ Project Monaco is a web-based collaborative code editor that manages conflicts i
 
  
 
-## Release Notes 10-6-22 
+## Release Notes 
+### 10-6-22 
 - Resolving conflicts caused by latency bug fix 
 - Database created with some CRUD endpoints 
 - Added support for holding multiple documents in memory and allowing endpoints to edit specific documents 
