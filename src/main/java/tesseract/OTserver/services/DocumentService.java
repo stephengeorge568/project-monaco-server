@@ -74,9 +74,9 @@ public class DocumentService {
         return id;
     }
 
-//    public void saveDocumentModel(Document document) {
-//        GetDocumentResponse documentMetadata = this.getDocumentById(document.getId(), document.get)
-//    }
+    public void saveDocumentModel() {
+
+    }
 
 
     public void openAndAuthenticateDocument(OpenDocumentRequest request) throws IOException {
@@ -94,9 +94,7 @@ public class DocumentService {
     }
 
     public boolean validatePassword(String givenPassword, String storedHashedPassword) {
-        String given = passwordEncoder.encode(givenPassword);
-        System.out.println(given + " === " + storedHashedPassword);
-        return given.equals(storedHashedPassword);
+        return passwordEncoder.matches(givenPassword, storedHashedPassword);
     }
 
 }

@@ -25,6 +25,8 @@ public class OtService {
     private HashMap<Long, Document> documents;
 
     public OtService() {
+
+        this.documents = new HashMap<>();
         this.clientIdentityCounter = 0;
     }
 
@@ -103,7 +105,8 @@ public class OtService {
     private void propogateToClients(StringChangeRequest changedRequest) {
         Document doc = this.getDocuments().get(changedRequest.getDocumentId());
         changedRequest.setSetID(doc.getRevID());
-        this.simpMessagingTemplate.convertAndSend("/broker/string-change-request", changedRequest);
+        System.out.println("Proping to " + doc.getId());
+        this.simpMessagingTemplate.convertAndSend("/broker/" + doc.getId(), changedRequest);
     }
 
     public boolean isDocumentPresent(Long id) {
