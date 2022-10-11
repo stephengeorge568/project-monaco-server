@@ -48,7 +48,13 @@ public class DocumentController {
         documentService.openAndAuthenticateDocument(request);
     }
 
-
-
-
+    @RequestMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            method = RequestMethod.PUT,
+            path = "/{id}"
+    )
+    @ResponseBody
+    public void saveDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
+        documentService.saveDocumentModel(id, password);
+    }
 }

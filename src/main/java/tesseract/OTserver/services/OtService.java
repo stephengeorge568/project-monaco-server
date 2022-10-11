@@ -61,6 +61,7 @@ public class OtService {
                     document.getChangeHistory().put(changedRequest.getRevID(), new ArrayList<>(Arrays.asList(changedRequest)));
 
                 updateModel(changedRequest);
+                document.setHasChanged(true);
                 propogateToClients(changedRequest);
             }
         }

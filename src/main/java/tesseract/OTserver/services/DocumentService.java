@@ -13,6 +13,7 @@ import tesseract.OTserver.objects.GetDocumentResponse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -74,8 +75,19 @@ public class DocumentService {
         return id;
     }
 
-    public void saveDocumentModel() {
+    public void saveDocumentModel(Long id, String password) throws IOException {
+        GetDocumentResponse response = this.getDocumentById(id, password);
 
+        String model = response.getModel();
+
+        if (this.otService.getDocuments().get(id).isHasChanged()) {
+            String filepath = env.getProperty("document.directory.path") + id + '.' + response.getFiletype();
+
+            FileWriter writer = new FileWriter(filepath, false);
+            writer.write(model);
+            this.otService.getDocuments().get(id).setHasChanged(false);
+            writer.close();
+        }
     }
 
 

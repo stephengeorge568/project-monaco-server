@@ -28,6 +28,8 @@ public class Document {
      */
     private Queue<StringChangeRequest> pendingChangesQueue;
 
+    private boolean hasChanged;
+
     private Long id;
 
     public Document(Long id) {
@@ -36,6 +38,7 @@ public class Document {
         this.revID = 1;
         this.changeHistory = new HashMap<>();
         this.pendingChangesQueue = new LinkedList<>();
+        this.hasChanged = false;
     }
 
     public String getModel() {
@@ -72,5 +75,13 @@ public class Document {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isHasChanged() {
+        return hasChanged;
+    }
+
+    public void setHasChanged(boolean hasChanged) {
+        this.hasChanged = hasChanged;
     }
 }
