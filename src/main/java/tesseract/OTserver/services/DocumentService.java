@@ -1,10 +1,13 @@
 package tesseract.OTserver.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tesseract.OTserver.controllers.OtController;
 import tesseract.OTserver.mappers.FileMapper;
 import tesseract.OTserver.objects.Document;
 import tesseract.OTserver.objects.OpenDocumentRequest;
@@ -20,6 +23,8 @@ import java.nio.file.Path;
 
 @Service
 public class DocumentService {
+
+    private static final Logger logger = LogManager.getLogger(DocumentService.class);
 
     @Autowired
     private FileMapper fileMapper;
@@ -48,6 +53,7 @@ public class DocumentService {
             Path path = Path.of(filepath);
             response.setModel(Files.readString(path));
         } else {
+            logger.error("Failed to open and read file [{}].", filepath);
             throw new FileNotFoundException("File: " + filepath + " does not exist.");
         }
 
