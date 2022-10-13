@@ -1,5 +1,7 @@
 package tesseract.OTserver.controllers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ import java.io.IOException;
 @RequestMapping("/api/document")
 public class DocumentController {
 
+    private static final Logger logger = LogManager.getLogger(DocumentController.class);
+
     @Autowired
     private DocumentService documentService;
 
@@ -24,6 +28,7 @@ public class DocumentController {
     )
     @ResponseBody
     public GetDocumentResponse getDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
+        logger.info("Document [{}] was requested.", id);
         return documentService.getDocumentById(id, password);
     }
 
@@ -34,6 +39,7 @@ public class DocumentController {
     )
     @ResponseBody
     public Long createDocument(HttpServletRequest httpRequest, @RequestBody CreateDocumentRequest request) throws IOException {
+        logger.info("Created document was requested {}.", request);
         return documentService.createDocument(request);
     }
 
@@ -45,6 +51,7 @@ public class DocumentController {
     )
     @ResponseBody
     public void openAndAuthenticateDocument(HttpServletRequest httpRequest, @RequestBody OpenDocumentRequest request) throws IOException {
+        logger.info("Request to open document [{}].", request.getId());
         documentService.openAndAuthenticateDocument(request);
     }
 
@@ -55,6 +62,7 @@ public class DocumentController {
     )
     @ResponseBody
     public void saveDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
+        logger.info("Save document [{}] was requested.", id);
         documentService.saveDocumentModel(id, password);
     }
 }
