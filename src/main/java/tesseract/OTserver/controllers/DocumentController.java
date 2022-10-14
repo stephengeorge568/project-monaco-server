@@ -66,13 +66,4 @@ public class DocumentController {
         logger.info("Save document [{}] was requested.", id);
         documentService.saveDocumentModel(id, password);
     }
-
-//    @ExceptionHandler(DocumentNotFoundException.class)
-//    public ResponseEntity<ErrorResponse> handleItemNotFoundException(
-//            NoSuchElementFoundException exception,
-//            WebRequest request
-//    ){
-//        log.error("Failed to find the requested element", exception);
-//        return buildErrorResponse(exception, HttpStatus.NOT_FOUND, request);
-//    }
 }

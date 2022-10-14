@@ -42,10 +42,7 @@ public class DocumentService {
 
         // Get document metadata
         GetDocumentResponse response = fileMapper.getDocumentById(id);
-        /// If document id is not in database
-        if (response == null) {
-            throw new DocumentNotFoundException(id);
-        }
+        if (response == null) throw new DocumentNotFoundException(id);
 
         validatePassword(password, response.getPassword_hash(), id);
 
@@ -62,7 +59,7 @@ public class DocumentService {
             throw new DocumentNotFoundInFilesystemException(id);
         }
 
-        // Set password_hash to null
+        // Set password_hash to null, no reason to send this back to client
         response.setPassword_hash(null);
 
         return response;
@@ -82,11 +79,16 @@ public class DocumentService {
         String filepath = documentDirectoryPath + id + '.' + request.getFiletype();
         File file = new File(filepath);
 
-        if (!file.createNewFile()) throw new DocumentException("Failed to create file on filesystem for document " + request.getFilename());
+        try {
+            if (!file.createNewFile()) throw new DocumentException("Failed to create file on filesystem for document " + request.getFilename());
+        } catch (IOException e) {
+            throw new DocumentException("Failed to create file on filesystem for document " + request.getFilename());
+        }
+
         return id;
     }
 
-    public void saveDocumentModel(Long id, String password) throws IOException {
+    public void saveDocumentModel(Long id, String password) {
         try {
             GetDocumentResponse response = this.getDocumentById(id, password);
 
