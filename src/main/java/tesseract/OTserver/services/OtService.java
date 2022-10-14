@@ -3,6 +3,7 @@ package tesseract.OTserver.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import tesseract.OTserver.exceptions.DocumentNotInMemoryException;
 import tesseract.OTserver.objects.Document;
 import tesseract.OTserver.objects.StringChangeRequest;
 import tesseract.OTserver.util.DocumentUtil;
@@ -31,7 +32,7 @@ public class OtService {
     }
 
     public Document getDocument(Long id) throws IOException {
-        if (!this.documents.containsKey(id)) throw new IOException("Attempted to get document with id " + id + " but failed.");
+        if (!this.documents.containsKey(id)) throw new DocumentNotInMemoryException(id);
         return this.documents.get(id);
     }
 
@@ -106,7 +107,6 @@ public class OtService {
     private void propogateToClients(StringChangeRequest changedRequest) {
         Document doc = this.getDocuments().get(changedRequest.getDocumentId());
         changedRequest.setSetID(doc.getRevID());
-        System.out.println("Proping to " + doc.getId());
         this.simpMessagingTemplate.convertAndSend("/broker/" + doc.getId(), changedRequest);
     }
 

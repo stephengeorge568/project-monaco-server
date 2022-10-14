@@ -1,5 +1,7 @@
 package tesseract.OTserver.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,11 +16,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import tesseract.OTserver.controllers.DocumentController;
 import tesseract.OTserver.services.DocumentService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final Logger logger = LogManager.getLogger(WebSecurityConfig.class);
 
     @Autowired
     private Environment env;
@@ -36,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
             if (!isSecurityDisabled) {
-                System.out.println("Prod security configurations activating...");
+                logger.info("Prod security configurations activating...");
                 http
                     .requiresChannel(channel ->
                             channel.anyRequest().requiresSecure())
@@ -44,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             authorize.anyRequest().permitAll())
                     .csrf().disable(); // otherwise post requests get 403 forbidden. temporary hotfix
             } else {
-                System.out.println("Dev security configurations activating...");
+                logger.info("Dev security configurations activating...");
                 http.
                         authorizeRequests()
                         .antMatchers("/**").permitAll()

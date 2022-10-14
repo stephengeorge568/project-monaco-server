@@ -7,7 +7,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tesseract.OTserver.controllers.OtController;
+import tesseract.OTserver.exceptions.DocumentAlreadyOpenException;
+import tesseract.OTserver.exceptions.DocumentException;
+import tesseract.OTserver.exceptions.DocumentNotFoundInFilesystemException;
+import tesseract.OTserver.exceptions.DocumentWrongPasswordException;
 import tesseract.OTserver.mappers.FileMapper;
 import tesseract.OTserver.objects.Document;
 import tesseract.OTserver.objects.OpenDocumentRequest;
@@ -42,7 +45,7 @@ public class DocumentService {
 
         GetDocumentResponse response = fileMapper.getDocumentById(id);
 
-        if (!validatePassword(password, response.getPassword_hash())) throw new IOException("Wrong password");
+        validatePassword(password, response.getPassword_hash(), id);
 
         String documentDirectoryPath = env.getProperty("document.directory.path");
 
@@ -54,7 +57,7 @@ public class DocumentService {
             response.setModel(Files.readString(path));
         } else {
             logger.error("Failed to open and read file [{}].", filepath);
-            throw new FileNotFoundException("File: " + filepath + " does not exist.");
+            throw new DocumentNotFoundInFilesystemException(id);
         }
 
         // Set password_hash to null
@@ -76,24 +79,29 @@ public class DocumentService {
         // Get document model
         String filepath = documentDirectoryPath + id + '.' + request.getFiletype();
         File file = new File(filepath);
-        // TODO ERROR HANDLING
-        file.createNewFile();
+
+        if (!file.createNewFile()) throw new DocumentException("Failed to create file on filesystem for document " + request.getFilename());
         return id;
     }
 
     public void saveDocumentModel(Long id, String password) throws IOException {
-        GetDocumentResponse response = this.getDocumentById(id, password);
+        try {
+            GetDocumentResponse response = this.getDocumentById(id, password);
 
-        String model = response.getModel();
+            String model = response.getModel();
 
-        if (this.otService.getDocuments().get(id).isHasChanged()) {
-            String filepath = env.getProperty("document.directory.path") + id + '.' + response.getFiletype();
+            if (this.otService.getDocuments().get(id).isHasChanged()) {
+                String filepath = env.getProperty("document.directory.path") + id + '.' + response.getFiletype();
 
-            FileWriter writer = new FileWriter(filepath, false);
-            writer.write(model);
-            this.otService.getDocuments().get(id).setHasChanged(false);
-            writer.close();
+                FileWriter writer = new FileWriter(filepath, false);
+                writer.write(model);
+                this.otService.getDocuments().get(id).setHasChanged(false);
+                writer.close();
+            }
+        } catch (Exception e) {
+            throw new DocumentException("Failed to write to document " + id + ".");
         }
+
     }
 
 
@@ -102,17 +110,17 @@ public class DocumentService {
         GetDocumentResponse getDocumentResponse = getDocumentById(request.getId(), request.getPassword());
 
         // Ensure no document in list shares request's id
-        if (this.otService.isDocumentPresent(getDocumentResponse.getId())) throw new IOException("Document cannot open because it is already open.");
+        if (this.otService.isDocumentPresent(getDocumentResponse.getId())) throw new DocumentAlreadyOpenException(getDocumentResponse.getId());
 
-        validatePassword(request.getPassword(), getDocumentResponse.getPassword_hash());
+        validatePassword(request.getPassword(), getDocumentResponse.getPassword_hash(), getDocumentResponse.getId());
 
         // Create document object in list of documents that are open for transformation
         Document document = new Document(getDocumentResponse.getId());
         this.otService.getDocuments().put(document.getId(), document);
     }
 
-    public boolean validatePassword(String givenPassword, String storedHashedPassword) {
-        return passwordEncoder.matches(givenPassword, storedHashedPassword);
+    public void validatePassword(String givenPassword, String storedHashedPassword, Long id) {
+        if (!passwordEncoder.matches(givenPassword, storedHashedPassword)) throw new DocumentWrongPasswordException(id);
     }
 
 }

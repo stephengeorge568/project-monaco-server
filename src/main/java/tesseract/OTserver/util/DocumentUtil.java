@@ -35,7 +35,6 @@ public class DocumentUtil {
      */
     public static int getIndex(String model, int col, int line) {
         int index = 0;
-        System.out.println("New update");
         int newLineCount = 0;
         int colCount = 0;
 
