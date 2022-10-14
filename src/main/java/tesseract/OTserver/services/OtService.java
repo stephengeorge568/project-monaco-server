@@ -26,7 +26,6 @@ public class OtService {
     private HashMap<Long, Document> documents;
 
     public OtService() {
-
         this.documents = new HashMap<>();
         this.clientIdentityCounter = 0;
     }
