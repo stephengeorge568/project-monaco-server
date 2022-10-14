@@ -7,10 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tesseract.OTserver.exceptions.DocumentAlreadyOpenException;
-import tesseract.OTserver.exceptions.DocumentException;
-import tesseract.OTserver.exceptions.DocumentNotFoundInFilesystemException;
-import tesseract.OTserver.exceptions.DocumentWrongPasswordException;
+import tesseract.OTserver.exceptions.*;
 import tesseract.OTserver.mappers.FileMapper;
 import tesseract.OTserver.objects.Document;
 import tesseract.OTserver.objects.OpenDocumentRequest;
@@ -43,7 +40,12 @@ public class DocumentService {
 
     public GetDocumentResponse getDocumentById(Long id, String password) throws IOException {
 
+        // Get document metadata
         GetDocumentResponse response = fileMapper.getDocumentById(id);
+        /// If document id is not in database
+        if (response == null) {
+            throw new DocumentNotFoundException(id);
+        }
 
         validatePassword(password, response.getPassword_hash(), id);
 
