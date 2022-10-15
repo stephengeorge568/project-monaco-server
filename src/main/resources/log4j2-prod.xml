@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn">
-    <Properties>
-        <Property name="basePath">/etc/monaco/logs</Property>
-    </Properties>
-
+<Configuration status="INFO">
     <Appenders>
-        <RollingFile name="fileLogger"
-                     fileName="${basePath}/monaco.log"
-                     filePattern="${basePath}/monaco-%d{yyyy-MM-dd}.log">
-            <PatternLayout>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-                </pattern>
-            </PatternLayout>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-                <SizeBasedTriggeringPolicy size="10MB" />
-            </Policies>
-            <!-- Max 10 files will be created everyday -->
-            <DefaultRolloverStrategy max="10">
-                <Delete basePath="${basePathr}" maxDepth="10">
-                    <!-- Delete all files older than 30 days -->
-                    <IfLastModified age="30d" />
-                </Delete>
-            </DefaultRolloverStrategy>
-        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <File name="MyFile" fileName="monaco.log" immediateFlush="false" append="false">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
     </Appenders>
     <Loggers>
-        <Root level="info" additivity="false">
-            <appender-ref ref="fileLogger" />
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="MyFile"/>
         </Root>
     </Loggers>
 </Configuration>
