@@ -11,9 +11,19 @@
         <result column="filename" property="filename" />
     </resultMap>
 
+    <resultMap id="GetDocumentMetaResponseMap" type="GetDocumentMetaResponse">
+        <id column="id" property="id" />
+        <result column="filetype" property="filetype" />
+        <result column="filename" property="filename" />
+    </resultMap>
+
     <!-- Query definitions -->
     <select id="getDocumentById" resultMap="GetDocumentResponseMap">
         SELECT id,password_hash,filename,filetype FROM document WHERE id=#{id}
+    </select>
+
+    <select id="getDocumentMetaById" resultMap="GetDocumentMetaResponseMap">
+        SELECT id,filename,filetype FROM document WHERE id=#{id}
     </select>
 
     <!-- Last three properties populate request's id field as the auto generated ID from mySQL -->

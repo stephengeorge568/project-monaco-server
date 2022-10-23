@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import tesseract.OTserver.exceptions.DocumentNotFoundException;
+import tesseract.OTserver.objects.GetDocumentMetaResponse;
 import tesseract.OTserver.objects.OpenDocumentRequest;
 import tesseract.OTserver.objects.CreateDocumentRequest;
 import tesseract.OTserver.objects.GetDocumentResponse;
@@ -31,6 +32,17 @@ public class DocumentController {
     public GetDocumentResponse getDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
         logger.info("Document [{}] was requested.", id);
         return documentService.getDocumentById(id, password);
+    }
+
+    @RequestMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            method = RequestMethod.GET,
+            path = "meta/{id}"
+    )
+    @ResponseBody
+    public GetDocumentMetaResponse getDocument(HttpServletRequest httpRequest, @PathVariable Long id) throws IOException {
+        logger.info("Document meta [{}] was requested.", id);
+        return documentService.getDocumentById(id);
     }
 
     @RequestMapping(

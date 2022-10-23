@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tesseract.OTserver.exceptions.*;
 import tesseract.OTserver.mappers.FileMapper;
-import tesseract.OTserver.objects.Document;
-import tesseract.OTserver.objects.OpenDocumentRequest;
-import tesseract.OTserver.objects.CreateDocumentRequest;
-import tesseract.OTserver.objects.GetDocumentResponse;
+import tesseract.OTserver.objects.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,6 +62,15 @@ public class DocumentService {
         return response;
     }
 
+    public GetDocumentMetaResponse getDocumentById(Long id) throws IOException {
+
+        // Get document metadata
+        GetDocumentMetaResponse response = fileMapper.getDocumentMetaById(id);
+        if (response == null) throw new DocumentNotFoundException(id);
+
+        return response;
+    }
+
     @Transactional(rollbackFor=Exception.class)
     public Long createDocument(CreateDocumentRequest request) throws IOException {
         request.setPassword_hash(passwordEncoder.encode(request.getPassword_hash()));
@@ -111,16 +117,17 @@ public class DocumentService {
 
     public void openAndAuthenticateDocument(OpenDocumentRequest request) throws IOException {
         // Get document from file system and database
+        // This also validates password.
+        // TODO use filemapper call instead of calling service method?
         GetDocumentResponse getDocumentResponse = getDocumentById(request.getId(), request.getPassword());
 
         // Ensure no document in list shares request's id
-        if (this.otService.isDocumentPresent(getDocumentResponse.getId())) throw new DocumentAlreadyOpenException(getDocumentResponse.getId());
+        if (!this.otService.isDocumentPresent(getDocumentResponse.getId())) {
+            // Create document object in list of documents that are open for transformation
+            Document document = new Document(getDocumentResponse.getId());
+            this.otService.getDocuments().put(document.getId(), document);
+        }
 
-        validatePassword(request.getPassword(), getDocumentResponse.getPassword_hash(), getDocumentResponse.getId());
-
-        // Create document object in list of documents that are open for transformation
-        Document document = new Document(getDocumentResponse.getId());
-        this.otService.getDocuments().put(document.getId(), document);
     }
 
     public void validatePassword(String givenPassword, String storedHashedPassword, Long id) {
