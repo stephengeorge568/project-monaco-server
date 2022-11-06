@@ -54,6 +54,14 @@ public class StringChangeRequest {
         this.revID = revID;
     }
 
+    public StringChangeRequest(String text, MonacoRange range, Integer revID, Integer identity, Long docId) {
+        this.text = text;
+        this.range = range;
+        this.revID = revID;
+        this.identity = identity;
+        this.documentId = docId;
+    }
+
     public StringChangeRequest() {}
 
     // TODO deep copy constructor, convert to .clone() override

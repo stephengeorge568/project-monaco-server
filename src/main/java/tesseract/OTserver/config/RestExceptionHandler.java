@@ -19,13 +19,13 @@ public class RestExceptionHandler {
     @ExceptionHandler(value = DocumentNotFoundException.class)
     public ResponseEntity<String> handlerDocumentException(DocumentNotFoundException e) {
         logger.error("", e);
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = DocumentNotFoundInFilesystemException.class)
     public ResponseEntity<String> handlerDocumentException(DocumentNotFoundInFilesystemException e) {
         logger.error("", e);
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = DocumentAlreadyOpenException.class)
