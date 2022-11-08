@@ -16,6 +16,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/document")
+@CrossOrigin(origins = "http://localhost:4200")
 public class DocumentController {
 
     private static final Logger logger = LogManager.getLogger(DocumentController.class);
@@ -74,7 +75,7 @@ public class DocumentController {
             path = "/{id}"
     )
     @ResponseBody
-    public void saveDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestParam String password) throws IOException {
+    public void saveDocument(HttpServletRequest httpRequest, @PathVariable Long id, @RequestBody String password) throws IOException {
         logger.info("Save document [{}] was requested.", id);
         documentService.saveDocumentModel(id, password);
     }

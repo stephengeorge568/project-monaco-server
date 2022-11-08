@@ -98,11 +98,11 @@ public class DocumentService {
         try {
             GetDocumentResponse response = this.getDocumentById(id, password);
 
-            String model = response.getModel();
+            String model = this.otService.getDocuments().get(id).getModel();
 
             if (this.otService.getDocuments().get(id).isHasChanged()) {
                 String filepath = env.getProperty("document.directory.path") + id + '.' + response.getFiletype();
-
+                logger.info(filepath);
                 FileWriter writer = new FileWriter(filepath, false);
                 writer.write(model);
                 this.otService.getDocuments().get(id).setHasChanged(false);
