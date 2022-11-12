@@ -16,11 +16,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        //registry.addMapping("/**").allowedOriginPatterns("*").maxAge(3600);
-        // Set to accept all ...
+        System.out.println("11/11/2022 11:44PM");
         try {
             if (env.getProperty("spring.profiles.active").equals("prod")) {
-                registry.addMapping("/**").allowedOriginPatterns("*"); // TODO
+                registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods("POST","PUT","GET"); // TODO
             } else {
                 registry.addMapping("/**").allowedOriginPatterns("*");
             }
