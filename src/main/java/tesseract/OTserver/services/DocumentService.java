@@ -124,7 +124,7 @@ public class DocumentService {
         // Ensure no document in list shares request's id
         if (!this.otService.isDocumentPresent(getDocumentResponse.getId())) {
             // Create document object in list of documents that are open for transformation
-            Document document = new Document(getDocumentResponse.getId());
+            Document document = new Document(getDocumentResponse.getId(), getDocumentResponse.getModel());
             this.otService.getDocuments().put(document.getId(), document);
         }
 

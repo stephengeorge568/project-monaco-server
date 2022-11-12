@@ -41,6 +41,15 @@ public class Document {
         this.hasChanged = false;
     }
 
+    public Document(Long id, String model) {
+        this.id = id;
+        this.model = model;
+        this.revID = 1;
+        this.changeHistory = new HashMap<>();
+        this.pendingChangesQueue = new LinkedList<>();
+        this.hasChanged = false;
+    }
+
     public String getModel() {
         return model;
     }
