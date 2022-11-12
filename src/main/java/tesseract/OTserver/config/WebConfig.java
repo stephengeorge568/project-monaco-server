@@ -20,12 +20,12 @@ public class WebConfig implements WebMvcConfigurer {
         // Set to accept all ...
         try {
             if (env.getProperty("spring.profiles.active").equals("prod")) {
-                registry.addMapping("/**"); // TODO
+                registry.addMapping("/**").allowedOriginPatterns("*"); // TODO
             } else {
-                registry.addMapping("/**");
+                registry.addMapping("/**").allowedOriginPatterns("*");
             }
         } catch (NullPointerException e) {
-            registry.addMapping("/**");
+            registry.addMapping("/**").allowedOriginPatterns("*");
         }
     }
 }

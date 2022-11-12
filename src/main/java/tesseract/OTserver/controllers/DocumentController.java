@@ -16,7 +16,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/document")
-@CrossOrigin(origins = "http://localhost:4200")
 public class DocumentController {
 
     private static final Logger logger = LogManager.getLogger(DocumentController.class);
