@@ -342,6 +342,37 @@ public class OperationalTransformationTests {
     }
 
     @Test
+    void transform_EnterBugFix() { // restart here
+        StringChangeRequest request = new StringChangeRequest("-", new MonacoRange(6, 6, 1, 1 ), 1);
+        request.setIdentity(1);
+        StringChangeRequest history1 = new StringChangeRequest("-", new MonacoRange(2, 2, 1, 1), 1);
+        StringChangeRequest history2 = new StringChangeRequest("-", new MonacoRange(3, 3, 1, 1), 1);
+        StringChangeRequest history3 = new StringChangeRequest("\n", new MonacoRange(2, 2, 1, 1), 1);
+//        StringChangeRequest history4 = new StringChangeRequest("-", new MonacoRange(4, 4, 1, 1), 1);
+//        StringChangeRequest history5 = new StringChangeRequest("-", new MonacoRange(5, 5, 1, 1), 1);
+        StringChangeRequest history4 = new StringChangeRequest("-", new MonacoRange(2, 2, 2, 2), 1);
+        StringChangeRequest history5 = new StringChangeRequest("-", new MonacoRange(3, 3, 2, 2), 1);
+        history1.setIdentity(1);
+        history2.setIdentity(1);
+        history3.setIdentity(3);
+        history4.setIdentity(1);
+        history5.setIdentity(1);
+        ArrayList<StringChangeRequest> historyList = new ArrayList<>();
+        historyList.addAll(Arrays.asList(new StringChangeRequest[]{history1, history2, history3, history4, history5}));
+
+        HashMap<Integer, ArrayList<StringChangeRequest>> history = new HashMap<>();
+        history.put(1, historyList);
+        StringChangeRequest expe1 = new StringChangeRequest("", new MonacoRange(4, 4, 2, 2), 1);
+        ArrayList<StringChangeRequest> trans = OperationalTransformation.transform(request, history);
+
+        System.out.println("Transformed: " + trans.get(0).toString());
+        System.out.println("Expected:    " + expe1.toString());
+
+        //assertEquals(true, trans.get(0).isEqual(expe1));
+        //assertEquals(true, trans.get(1) == null);
+    }
+
+    @Test
     void transform_twoReturnedRequests() { // restart here
         StringChangeRequest request = new StringChangeRequest("", new MonacoRange(1, 10, 1, 1 ), 1);
         request.setIdentity(2);

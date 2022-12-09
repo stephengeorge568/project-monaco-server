@@ -1,5 +1,7 @@
 package tesseract.OTserver.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.*;
 @Service
 public class OtService {
 
+    private static final Logger logger = LogManager.getLogger(OtService.class);
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate; // for websocket messaging
@@ -59,7 +62,8 @@ public class OtService {
                     document.getChangeHistory().get(changedRequest.getRevID()).add(changedRequest);
                 else
                     document.getChangeHistory().put(changedRequest.getRevID(), new ArrayList<>(Arrays.asList(changedRequest)));
-
+                logger.info("SCR T: {}", request.toString());
+                logger.info("\n");
                 updateModel(changedRequest);
                 document.setHasChanged(true);
                 propogateToClients(changedRequest);
