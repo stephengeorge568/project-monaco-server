@@ -1,4 +1,4 @@
-# OT-Editor
+# OT-Server
 This is the backend API and server for a web based collaborative code editor. Users can create documents and edit those documents with anyone that can access a browser. The editor supports features like cloud save, downloading the file, syntax highlighting, some simple intellisense, and more! 
 ## How to use
 
