@@ -8,6 +8,8 @@ This is the backend API and server for a web based collaborative code editor. Us
 4. Perform command ‘docker build –t ot-server .’ on root folder 
 5. Perform command ‘docker run -p 8080:8080 ot-server' 
 
+Or, to local host, simply run download Maven, JDK and run ‘mvn spring-boot:run’ 
+
 ## Release Notes
 September 2022: Only one document at a time can be supported. Some minor bugs with operational transformation process. No way to save document model to filesystem or database.
 
