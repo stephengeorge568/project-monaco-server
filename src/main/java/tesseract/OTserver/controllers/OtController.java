@@ -45,8 +45,8 @@ public class OtController {
     )
     @ResponseBody
     public ResponseEntity<Integer> getIdentity(HttpServletRequest httpRequest) {
-        logger.info("{} has connected and requested user id.", httpRequest.getRemoteAddr());
         otService.incrementClientIdentityCounter();
+        logger.info("{} has connected and requested user id. {}", httpRequest.getRemoteAddr(), otService.getClientIdentityCounter());
         return ResponseEntity.ok(otService.getClientIdentityCounter());
     }
 

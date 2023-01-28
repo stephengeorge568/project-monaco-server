@@ -358,7 +358,7 @@ public class OperationalTransformationTests {
         history4.setIdentity(1);
         history5.setIdentity(1);
         ArrayList<StringChangeRequest> historyList = new ArrayList<>();
-        historyList.addAll(Arrays.asList(new StringChangeRequest[]{history1, history2, history3, history4, history5}));
+        historyList.addAll(Arrays.asList(new StringChangeRequest[]{history1, history2, history3, history4, history5,}));
 
         HashMap<Integer, ArrayList<StringChangeRequest>> history = new HashMap<>();
         history.put(1, historyList);
@@ -371,6 +371,39 @@ public class OperationalTransformationTests {
         //assertEquals(true, trans.get(0).isEqual(expe1));
         //assertEquals(true, trans.get(1) == null);
     }
+
+//    @Test
+//    void transform_NewLineConcurrentWithOtherUserTypingFailCase() {
+//        // Edit this request with what change you want to test...
+//        StringChangeRequest request = new StringChangeRequest(, new MonacoRange(), ))
+//
+//        // NOTE: these are the historical requests post transformation...
+//        StringChangeRequest history1 = new StringChangeRequest("a", new MonacoRange(1,1,1,1), 390, 1);
+//        StringChangeRequest history2 = new StringChangeRequest("s", new MonacoRange(2,2,1,1), 391, 1);
+//        StringChangeRequest history3 = new StringChangeRequest("d", new MonacoRange(3,3,1,1), 392, 1);
+//        StringChangeRequest history4 = new StringChangeRequest("j", new MonacoRange(4,4,1,1), 393, 1);
+//        StringChangeRequest history5 = new StringChangeRequest("h", new MonacoRange(5,5,1,1), 393, 1);
+//        StringChangeRequest history6 = new StringChangeRequest("g", new MonacoRange(6,6,1,1), 395, 1);
+//        StringChangeRequest history7 = new StringChangeRequest("\n", new MonacoRange(3,3,1,1), 393, 2);
+//        StringChangeRequest history8 = new StringChangeRequest("f", new MonacoRange(5,5,2,2), 397, 1);
+//        StringChangeRequest history9 = new StringChangeRequest("g", new MonacoRange(6,6,2,2), 398, 1);
+//        StringChangeRequest history10 = new StringChangeRequest("\n", new MonacoRange(1,1,2,2), 399, 2);
+//
+//        ArrayList<StringChangeRequest> historyList = new ArrayList<>();
+//        historyList.addAll(Arrays.asList(new StringChangeRequest[]{ history1,history2,history3,history4,history5,history6,history7,history8,history9,history10, }));
+//
+//        HashMap<Integer, ArrayList<StringChangeRequest>> history = new HashMap<>();
+//        history.put(1, historyList);
+//
+//        StringChangeRequest expectedResult = new StringChangeRequest(, new MonacoRange(), ))
+//        ArrayList<StringChangeRequest> transformedRequests = OperationalTransformation.transform(request, history);
+//
+//        System.out.println("Transformed: " + transformedRequests.get(0).toString());
+//        System.out.println("Expected:    " + expectedResult.toString());
+//
+//        assertEquals(true, transformedRequests.get(0).isEqual(expectedResult));
+//        assertEquals(true, transformedRequests.get(1) == null);
+//    }
 
     @Test
     void transform_twoReturnedRequests() { // restart here

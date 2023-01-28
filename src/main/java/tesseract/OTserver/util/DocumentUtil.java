@@ -38,7 +38,7 @@ public class DocumentUtil {
         int newLineCount = 0;
         int colCount = 0;
 
-        // TODO just use model string
+        // TODO just use model string array unnecessary lmao
         char[] arr = model.toCharArray();
         while (index < arr.length && newLineCount < line - 1) {
             if (arr[index] == '\n') newLineCount++;

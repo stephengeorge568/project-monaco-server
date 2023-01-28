@@ -54,6 +54,13 @@ public class StringChangeRequest {
         this.revID = revID;
     }
 
+    public StringChangeRequest(String text, MonacoRange range, Integer revID, Integer identity) {
+        this.text = text;
+        this.range = range;
+        this.revID = revID;
+        this.identity = identity;
+    }
+
     public StringChangeRequest(String text, MonacoRange range, Integer revID, Integer identity, Long docId) {
         this.text = text;
         this.range = range;
