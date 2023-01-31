@@ -48,7 +48,6 @@ public class OtService {
 
         document.getPendingChangesQueue().add(request);
         waitForTurn(request, document);
-
         ArrayList<StringChangeRequest> newChangeRequests = OperationalTransformation.transform(request, document.getChangeHistory());
 
         document.setRevID(document.getRevID() + 1);
