@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+            logger.info("App Version: 0.0.8");
             if (!isSecurityDisabled) {
                 logger.info("Prod security configurations activating...");
                 http
